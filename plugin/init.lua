@@ -1,4 +1,5 @@
 --[[
+
 This Plugin does the following:
  1. Makes the titlebar (this is where the tabs are located) to be transparent
  2. Randomize the appearance of the left and right ends of the tabs
@@ -8,6 +9,14 @@ This Plugin does the following:
     the tabs color when in the active, inactive and hover states.
  5. Provide a event handler to add the option to rename current tab in the
     command palette.
+ 6. Allow the use of the LEADER t keys to rename the active tab.
+ 7. Allow the use of CTRL+SHIFT+ 1, 2, 3, 4, 5, 6, 7, 8 or 9 to move the active
+    tab to absolute position from 0 to 8.
+ 8. Allow the use of ALT+SHIFT+{ and ALT+SHIFT+} to move the active tab
+    relative position to the left and to the right.
+
+Written by: sunbearc22
+Tested on: Ubuntu 24.04.3, wezterm 20251025-070338-b6e75fd7
 --]]
 local M = {}
 
@@ -15,8 +24,13 @@ local wezterm = require("wezterm")
 local act = wezterm.action
 
 function M.apply_to_config(config, opts)
-  local opts = opts or {}
-  opts = {}
+  local rename_tab_key = opts.rename_tab_key or "t"
+  local rename_tab_mods = opts.rename_tab_mods or "LEADER"
+  local move_tab_relative_left_key = opts.move_tab_relative_left_key or "{"
+  local move_tab_relative_right_key = opts.move_tab_relative_right_key or "}"
+  local move_tab_relative_mods = opts.move_tab_relative_mods or "ALT|SHIFT"
+  local move_tab_absolute_mods = opts.move_tab_relative_mods or "CTRL|SHIFT"
+
   -- Make the titlebar (when active and inactive) transparent
   -- This is where the wezterm tabs, left and right status are located.
   config.window_frame = {
@@ -164,20 +178,6 @@ function M.apply_to_config(config, opts)
     }
   end)
 
-  wezterm.on("rename-active-tab", function(window, pane)
-    act.PromptInputLine(
-      {
-        description = "Enter new name for tab",
-        initial_value = "",
-        action = wezterm.action_callback(function(window, pane, line)
-          if line then
-            window:active_tab():set_title(line)
-          end
-        end)
-      }
-    )
-  end)
-
   -- Load keys into config.keys
   if not config.keys then
     config.keys = {}
@@ -187,22 +187,38 @@ function M.apply_to_config(config, opts)
     -- CTRL+ALT + number to move to that position
     table.insert(config.keys, {
       key = tostring(i),
-      mods = 'CTRL|ALT',
+      mods = move_tab_absolute_mods,
       action = wezterm.action.MoveTab(i - 1),
     })
   end
   -- Other keys
   local keys = {
-    -- MoveTabRelative keys - relative repositioning
-    { key = '{', mods = 'SHIFT|ALT', action = act.MoveTabRelative(-1) },
-    { key = '}', mods = 'SHIFT|ALT', action = act.MoveTabRelative(1) },
-    -- Rename Tab
+    -- MoveTabRelative keys - relative repositioning in left and right direction.
     {
-      key = 'T',
-      mods = 'LEADER|SHIFT',
-      action = wezterm.action_callback(function(window, pane)
-        wezterm.emit("rename-active-tab", window, pane)
-      end)
+      key = move_tab_relative_left_key,
+      mods = move_tab_relative_mods,
+      action = act.MoveTabRelative(-1)
+    },
+    {
+      key = move_tab_relative_right_key,
+      mods = move_tab_relative_mods,
+      action = act.MoveTabRelative(1)
+    },
+    -- Rename active tab keys
+    {
+      key = rename_tab_key,
+      mods = rename_tab_mods,
+      action = act.PromptInputLine(
+        {
+          description = "Enter new name for tab",
+          initial_value = "",
+          action = wezterm.action_callback(function(window, pane, line)
+            if line then
+              window:active_tab():set_title(line)
+            end
+          end)
+        }
+      )
     },
   }
   for _, key in ipairs(keys) do
