@@ -14,7 +14,9 @@ local M = {}
 local wezterm = require("wezterm")
 local act = wezterm.action
 
-function M.apply_to_config(config)
+function M.apply_to_config(config, opts)
+  local opts = opts or {}
+  opts = {}
   -- Make the titlebar (when active and inactive) transparent
   -- This is where the wezterm tabs, left and right status are located.
   config.window_frame = {
