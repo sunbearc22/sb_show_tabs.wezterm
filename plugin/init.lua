@@ -14,6 +14,7 @@ This Plugin does the following:
     tab to absolute position from 0 to 8.
  8. Allow the use of ALT+SHIFT+{ and ALT+SHIFT+} to move the active tab
     relative position to the left and to the right.
+ 9. Show the date and time on the left end of the tab bar (i.e. titlebar)
 
 Written by: sunbearc22
 Tested on: Ubuntu 24.04.3, wezterm 20251025-070338-b6e75fd7
@@ -224,6 +225,21 @@ function M.apply_to_config(config, opts)
   for _, key in ipairs(keys) do
     table.insert(config.keys, key)
   end
+
+  -- Show date & time on the left of all tabs
+  wezterm.on("update-status", function(window, pane)
+    local date = wezterm.strftime("%a %b %e  %I:%M:%S %p")
+
+    -- Make it italic and underlined
+    window:set_left_status(wezterm.format({
+      { Attribute = { Underline = "Curly" } },
+      { Attribute = { Italic = true } },
+      { Attribute = { Intensity = "Half" } },
+      { Foreground = { Color = wezterm.GLOBAL.system.triadic[3] } },
+      { Background = { Color = "none" } },
+      { Text = date .. " " },
+    }))
+  end)
 end
 
 return M

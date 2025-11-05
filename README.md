@@ -1,11 +1,12 @@
 # sb_show_tabs.wezterm
 
+![tabs_appearances](images/tabs_appearances.gif)
  1. Show tabs with unique shapes, transparent background, having various shades of System color in the active, inactive and hovered states, and are automatically named.
-    ![tabs_appearances](images/tabs_appearances.gif)
  2. Allow you to use the <kbd>LEADER</kbd><kbd>t</kbd> keys and the command pallette to rename the active tab.
  3. Allow the use of <kbd>CTRL</kbd><kbd>SHIFT</kbd> <kbd>1</kbd>, <kbd>2</kbd>, <kbd>3</kbd>, <kbd>4</kbd>, <kbd>5</kbd>, <kbd>6</kbd>, <kbd>7</kbd>, <kbd>8</kbd> or <kbd>9</kbd> to move the active tab to the 1<sup>st</sup> to 9<sup>th</sup> positions.
  4. Allow the use of <kbd>ALT</kbd><kbd>SHIFT</kbd><kbd>{</kbd> and <kbd>ALT</kbd><kbd>SHIFT</kbd><kbd>}</kbd> to move the active tab relative position to the left and to the right.
  5. Allow you to customize these key presses.
+ 6. Show the date and time on its left end.
 
 
 ## Installation & Usage
