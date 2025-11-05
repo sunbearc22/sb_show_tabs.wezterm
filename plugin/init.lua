@@ -10,10 +10,8 @@ This Plugin does the following:
  5. Provide a event handler to add the option to rename current tab in the
     command palette.
  6. Allow the use of the LEADER t keys to rename the active tab.
- 7. Allow the use of CTRL+SHIFT+ 1, 2, 3, 4, 5, 6, 7, 8 or 9 to move the active
-    tab to absolute position from 0 to 8.
- 8. Allow the use of ALT+SHIFT+{ and ALT+SHIFT+} to move the active tab
-    relative position to the left and to the right.
+ 7. Allow the use of CTRL+SHIFT+ 1, 2, 3, 4, 5, 6, 7, 8 or 9 to goto the 1st to 9th tab.
+ 8. Allow the use of ALT+SHIFT+{ and ALT+SHIFT+} to reposition the current tab to the left and right.
  9. Show the date and time on the left end of the tab bar (i.e. titlebar)
 
 Written by: sunbearc22
@@ -183,9 +181,9 @@ function M.apply_to_config(config, opts)
   if not config.keys then
     config.keys = {}
   end
-  -- Insert MoveTab keys - absolute repositioning
+  -- Insert MoveTab keys - absolute active tab selection
   for i = 1, 9 do
-    -- CTRL+ALT + number to move to that position
+    -- CTRL+ALT + number to activate that tab position
     table.insert(config.keys, {
       key = tostring(i),
       mods = move_tab_absolute_mods,
