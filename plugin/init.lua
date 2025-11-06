@@ -25,10 +25,13 @@ local act = wezterm.action
 function M.apply_to_config(config, opts)
   local rename_tab_key = opts.rename_tab_key or "t"
   local rename_tab_mods = opts.rename_tab_mods or "LEADER"
-  local move_tab_relative_left_key = opts.move_tab_relative_left_key or "{"
-  local move_tab_relative_right_key = opts.move_tab_relative_right_key or "}"
-  local move_tab_relative_mods = opts.move_tab_relative_mods or "ALT|SHIFT"
-  local move_tab_absolute_mods = opts.move_tab_relative_mods or "CTRL|SHIFT"
+  local activate_left_key = opts.activate_left_key or "["
+  local activate_right_key = opts.activate_right_key or "]"
+  local activate_mods = opts.activate_mods or "ALT"
+  local move_left_key = opts.move_left_key or "{"
+  local move_right_key = opts.move_right_key or "}"
+  local move_mods = opts.move_mods or "ALT|SHIFT"
+  local snums = opts.snums or { "!", "@", "#", "$", "%", "^", "&", "*", "(" }
 
   -- Make the titlebar (when active and inactive) transparent
   -- This is where the wezterm tabs, left and right status are located.
@@ -181,28 +184,25 @@ function M.apply_to_config(config, opts)
   if not config.keys then
     config.keys = {}
   end
-  -- Insert MoveTab keys - absolute active tab selection
-  for i = 1, 9 do
-    -- CTRL+ALT + number to activate that tab position
-    table.insert(config.keys, {
-      key = tostring(i),
-      mods = move_tab_absolute_mods,
-      action = wezterm.action.MoveTab(i - 1),
-    })
+
+  for i, snum in ipairs(snums) do
+    -- Insert ActivateTab keys - absolute activation of tab
+    table.insert(config.keys,
+      { key = tostring(i), mods = activate_mods, action = act.ActivateTab(i - 1) }
+    )
+    -- Insert MoveTab keys - absolute moving of tab
+    table.insert(config.keys,
+      { key = snum, mods = move_mods, action = act.MoveTab(i - 1) }
+    )
   end
   -- Other keys
   local keys = {
-    -- MoveTabRelative keys - relative repositioning in left and right direction.
-    {
-      key = move_tab_relative_left_key,
-      mods = move_tab_relative_mods,
-      action = act.MoveTabRelative(-1)
-    },
-    {
-      key = move_tab_relative_right_key,
-      mods = move_tab_relative_mods,
-      action = act.MoveTabRelative(1)
-    },
+    -- activate tab on the left and right.
+    { key = activate_left_key,  mods = activate_mods, action = act.ActivateTabRelativeNoWrap(-1) },
+    { key = activate_right_key, mods = activate_mods, action = act.ActivateTabRelativeNoWrap(1) },
+    -- move tab to the left and right.
+    { key = move_left_key,      mods = move_mods,     action = act.MoveTabRelative(-1) },
+    { key = move_right_key,     mods = move_mods,     action = act.MoveTabRelative(1) },
     -- Rename active tab keys
     {
       key = rename_tab_key,
