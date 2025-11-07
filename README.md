@@ -48,7 +48,10 @@ wezterm.plugin.require(repo).apply_to_config(config,
   }
 )
 ```
+snums: ![snums](images/snums.png)
+
 Change the value of these option fields to your preference.
+
 
 ## Key Bindings
 
