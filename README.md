@@ -4,7 +4,8 @@
    ![tab_shapes](images/tab_shapes.gif)
    ![tab_state_colors](images/tab_state_colors.gif)
 2. Allow you to use the <kbd>LEADER</kbd><kbd>t</kbd> keys and the command pallette to rename the active tab.
-3. Provides key bindings to activate different tab and reposition the active tab (see Key Bindings). Also, you can change these key bindings.
+3. Provide key bindings to activate different tab and reposition the active tab (see Key Bindings). Also, you can change these key bindings.
+
    ![tab_activation](images/tab_activate.gif)
    ![tab_movement](images/tab_move.gif)
 4. Show the date and time on the left side of the tab bar.
