@@ -1,5 +1,4 @@
 --[[
-
 This Plugin does the following:
  1. Makes the titlebar (this is where the tabs are located) to be transparent
  2. Randomize the appearance of the left and right ends of the tabs
