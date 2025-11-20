@@ -71,18 +71,29 @@ function M.apply_to_config(config, opts)
   -- title of the active pane in that tab.
   local function tab_title(tab_info)
     local title = tab_info.tab_title
-    wezterm.info("[TABS] 1 title=" .. title .. " type(title)=" .. type(title))
+    wezterm.info("[TABS] 1 type(title)=" .. type(title))
+    if title == nil then
+      return "Untitled"
+    end
+    -- Ensure it's a string (in case it's some other type)
+    if type(title) ~= "string" then
+      return tostring(title)
+    end
     -- if the tab title is explicitly set, take that
-    if title and #title > 0 then
+    if title then
+      -- Handle empty titles
+      if title == "" then
+        return "Untitled"
+      end
       return title
     end
-    -- Otherwise, use the title from the active pane in that tab
-    title = tab_info.active_pane.title
-    if not title or #title == 0 then
-      title = tab_info.active_pane.current_working_dir
-    end
-    wezterm.info("[TABS] 2 title=" .. title .. " type(title)=" .. type(title))
-    return title
+    -- -- Otherwise, use the title from the active pane in that tab
+    -- title = tab_info.active_pane.title
+    -- if not title or #title == 0 then
+    --   title = tab_info.active_pane.current_working_dir
+    -- end
+    -- wezterm.info("[TABS] 2 title=" .. title .. " type(title)=" .. type(title))
+    -- return title
   end
 
   wezterm.on("format-tab-title", function(tab, tabs, panes, config, hover, max_width)
