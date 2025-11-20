@@ -71,6 +71,7 @@ function M.apply_to_config(config, opts)
   -- title of the active pane in that tab.
   local function tab_title(tab_info)
     local title = tab_info.tab_title
+    wezterm.info("[TABS] 1 title=" .. title .. " type(title)=" .. type(title))
     -- if the tab title is explicitly set, take that
     if title and #title > 0 then
       return title
@@ -80,6 +81,7 @@ function M.apply_to_config(config, opts)
     if not title or #title == 0 then
       title = tab_info.active_pane.current_working_dir
     end
+    wezterm.info("[TABS] 2 title=" .. title .. " type(title)=" .. type(title))
     return title
   end
 
@@ -107,6 +109,7 @@ function M.apply_to_config(config, opts)
 
     -- Ensure that the titles fit in the available space,
     -- and that we have room for the edges.
+    wezterm.info("[TABS] max_width=" .. max_width)
     title = wezterm.truncate_right(title, max_width - 2)
 
     -- Get the logo of the process named in title.
@@ -130,7 +133,7 @@ function M.apply_to_config(config, opts)
       libreofficebase = "", -- nf-linux-libreoffice-base
       libreofficecalc = "", -- nf-linux-libreoffice-calc
       libreofficeimpress = "", -- nf-linux-libreoffice-impress
-      libreofficemath = "", -- nf-linux-libreoffice-math
+      libreofficemath = "", -- nf-linux-libreoffice-mathwezterm.truncate_right
       libreofficewriter = "", -- nf-linux-libreoffice-writer
       steam = "", -- nf-linux-steam
       thunderbird = "", -- nf-linux-thunderbird
