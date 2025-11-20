@@ -108,8 +108,8 @@ function M.apply_to_config(config, opts)
 
     -- Ensure that the titles fit in the available space,
     -- and that we have room for the edges.
-    wezterm.info("[TABS] max_width=" .. max_width)
-    title = wezterm.truncate_right(title, max_width - 2)
+    -- wezterm.info("[TABS] max_width=" .. max_width)
+    -- title = wezterm.truncate_right(title, max_width - 2)
 
     -- Get the logo of the process named in title.
     local process_icons = {
