@@ -66,34 +66,22 @@ function M.apply_to_config(config, opts)
   local RIGHT_TAB_END = right_tab_end[rte]
 
   -- This function returns the suggested title for a tab.
-  -- It prefers the title that was set via `tab:set_title()`
-  -- or `wezterm cli set-tab-title`, but falls back to the
-  -- title of the active pane in that tab.
-  local function tab_title(tab_info)
+  -- It prefers the title that was set via `tab:set_title()` or `wezterm cli set-tab-title`,
+  -- but falls back to the title of the active pane in that tab.
+  -- If that is empty, fallback to cwd of active pane.
+  local function get_tab_title(tab_info)
     local title = tab_info.tab_title
-    wezterm.info("[TABS] 1 type(title)=" .. type(title))
-    if title == nil then
-      return "Untitled"
-    end
-    -- Ensure it's a string (in case it's some other type)
-    if type(title) ~= "string" then
-      return tostring(title)
-    end
     -- if the tab title is explicitly set, take that
-    if title then
-      -- Handle empty titles
-      if title == "" then
-        return "Untitled"
-      end
+    if title and #title > 0 then
       return title
     end
-    -- -- Otherwise, use the title from the active pane in that tab
-    -- title = tab_info.active_pane.title
-    -- if not title or #title == 0 then
-    --   title = tab_info.active_pane.current_working_dir
-    -- end
-    -- wezterm.info("[TABS] 2 title=" .. title .. " type(title)=" .. type(title))
-    -- return title
+    -- Otherwise, use the title from the active pane in that tab
+    -- If that is empty, then use cwd of active pane
+    title = tab_info.active_pane.title
+    if title == "" then
+      title = tab_info.active_pane.current_working_dir
+    end
+    return title
   end
 
   wezterm.on("format-tab-title", function(tab, tabs, panes, config, hover, max_width)
@@ -116,7 +104,7 @@ function M.apply_to_config(config, opts)
     local edge_foreground = background
 
     -- Create the tab's title
-    local title = tab_title(tab)
+    local title = get_tab_title(tab)
 
     -- Ensure that the titles fit in the available space,
     -- and that we have room for the edges.
